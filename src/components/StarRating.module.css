@@ -1,21 +1,20 @@
 .container {
     display: flex;
-    gap: 2px;
 }
 
 .star.sm {
-    width: 14px;
-    height: 14px;
+    width: 0.875rem;
+    height: 0.875rem;
 }
 
 .star.md {
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
 }
 
 .star.lg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .star.filled {
