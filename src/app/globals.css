@@ -1,26 +1,46 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: rgb(255, 255, 255);
+  --foreground: rgb(33, 33, 33);
+  --card: rgb(248, 248, 248);
+  --card-foreground: rgb(33, 33, 33);
+  --primary: rgb(255, 149, 0);
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(245, 245, 245);
+  --secondary-foreground: rgb(33, 33, 33);
+  --muted: rgb(245, 245, 245);
+  --muted-foreground: rgb(115, 115, 115);
+  --border: rgb(246, 246, 246);
+  --apple-blue: rgb(0, 122, 255);
+  --star-filled: rgb(255, 149, 0);
+  --star-empty: rgb(217, 217, 217);
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.875rem;
+  --font-size-2xl: 1.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
+  font-family: var(--font-family);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
 }

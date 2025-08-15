@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    gap: 2px;
+}
+
+.star.sm {
+    width: 14px;
+    height: 14px;
+}
+
+.star.md {
+    width: 16px;
+    height: 16px;
+}
+
+.star.lg {
+    width: 20px;
+    height: 20px;
+}
+
+.star.filled {
+    color: var(--star-filled);
+}
+
+.star.empty {
+    color: var(--star-empty);
+}

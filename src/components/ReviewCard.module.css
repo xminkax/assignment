@@ -1,0 +1,50 @@
+.card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.metadata {
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+}
+
+.reviewSeparator {
+    margin-right: var(--spacing-xs);
+}
+
+.author {
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.title {
+    font-weight: 600;
+    color: var(--foreground);
+    font-size: var(--font-size-sm);
+}
+
+.content {
+    font-size: var(--font-size-sm);
+    color: var(--foreground);
+    line-height: 1.6;
+}
+
+.expandButton {
+    color: var(--apple-blue);
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: var(--spacing-xs);
+    font-weight: 500;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+}
+
+.expandButton:hover {
+    text-decoration: underline;
+}
