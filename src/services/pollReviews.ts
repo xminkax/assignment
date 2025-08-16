@@ -163,14 +163,13 @@ export async function pollReviews(): Promise<void> {
   let currentPage = (state?.page ?? 0) + 1;
 
   try {
-    let lastPage: number | null = null;
     let isComplete = false;
     let newestDate: string | null = null;
 
     while (!isComplete) {
       const {
         reviews,
-        lastPage: totalPages,
+        lastPage,
         isCompleted,
       } = await fetchPage({
         page: currentPage,
@@ -178,8 +177,6 @@ export async function pollReviews(): Promise<void> {
         appId: APP_ID,
         lastUpdatedDate: state?.latestUpdatedDate ?? null,
       });
-
-      if (!lastPage) lastPage = totalPages;
 
       if (reviews.size === 0) {
         console.log("No new reviews");
@@ -232,6 +229,7 @@ export async function pollReviews(): Promise<void> {
         currentPage++;
       }
     }
+    console.log(`[${new Date().toISOString()}] Polling reviews end.`);
   } catch (err) {
     console.error("Error polling reviews:", err);
   }
