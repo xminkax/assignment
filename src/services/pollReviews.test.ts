@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { jest } from "@jest/globals";
 import { pollReviews } from "./pollReviews";
 import { existsSync } from "fs";

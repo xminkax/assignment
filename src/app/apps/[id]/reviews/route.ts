@@ -9,8 +9,8 @@ interface ReviewsData {
 }
 
 export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } },
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
 ): Promise<
   NextResponse<
     | Review[]
@@ -29,7 +29,7 @@ export async function GET(
     );
   }
 
-  const { id } = await context.params;
+  const { id } = await params;
   const filePath = path.join(process.cwd(), "data", `reviews_${id}.json`);
 
   try {
