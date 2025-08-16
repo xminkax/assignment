@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write '**/*.{frag,vert,js,tsx,ts}'"
+    "format": "prettier --write '**/*.{frag,vert,js,tsx,ts}'",
+    "test": "jest"
   },
   "dependencies": {
     "next": "15.4.6",
@@ -16,14 +17,18 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@jest/globals": "^30.0.5",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.0.5",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
+    "ts-jest": "^29.4.1",
     "typescript": "^5"
   }
 }
