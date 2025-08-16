@@ -27,7 +27,7 @@ See `server.ts` and `/src/services/pollReviews.ts` for more details.
 ### Endpoints 
 Endpoints are defined following the Next.js structure inside the `/app` folder.
 - http://localhost:3000/apps/595068606/reviews - returns reviews, which can be queried by hours, e.g http://localhost:3000/apps/595068606/reviews?hours=48
-- http://localhost:3000/apps/595068606/sync - allows polling reviews on demand
+- http://localhost:3000/apps/595068606/reviews/sync - allows polling reviews on demand
 
 ### Client
 - using css modules and react    

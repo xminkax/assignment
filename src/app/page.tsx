@@ -12,7 +12,7 @@ type Review = {
 
 async function getAppReviews(appId: string): Promise<Review[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/apps/${appId}/reviews?hours=2400`,
+    `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/apps/${appId}/reviews?hours=2400`,
     {
       cache: "no-store",
       headers: {

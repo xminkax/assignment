@@ -72,10 +72,10 @@ function mapToObjectArray<K, T>(map: Map<K, T>): T[] {
   return Array.from(map, ([_, value]) => ({ ...value }));
 }
 
-async function  fetchSavedReviews (): Promise<SavedReviews> {
-    return existsSync(DATA_FILE)
+async function fetchSavedReviews(): Promise<SavedReviews> {
+  return existsSync(DATA_FILE)
     ? JSON.parse(await readFile(DATA_FILE, "utf8"))
-    : {state: null, data: []};
+    : { state: null, data: [] };
 }
 
 async function saveReviews(reviews: SavedReviews): Promise<void> {
@@ -167,11 +167,7 @@ export async function pollReviews(): Promise<void> {
     let newestDate: string | null = null;
 
     while (!isComplete) {
-      const {
-        reviews,
-        lastPage,
-        isCompleted,
-      } = await fetchPage({
+      const { reviews, lastPage, isCompleted } = await fetchPage({
         page: currentPage,
         country: COUNTRY,
         appId: APP_ID,

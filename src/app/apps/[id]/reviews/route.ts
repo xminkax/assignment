@@ -1,13 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { Review, ReviewState } from "@/types/types";
-
-interface RequestParams {
-  params: {
-    id: string;
-  };
-}
 
 interface ReviewsData {
   state: ReviewState;
@@ -15,8 +9,8 @@ interface ReviewsData {
 }
 
 export async function GET(
-  request: Request,
-  { params }: RequestParams,
+  request: NextRequest,
+  context: { params: { id: string } },
 ): Promise<
   NextResponse<
     | Review[]
@@ -35,11 +29,8 @@ export async function GET(
     );
   }
 
-  const filePath = path.join(
-    process.cwd(),
-    "data",
-    `reviews_${params.id}.json`,
-  );
+  const { id } = await context.params;
+  const filePath = path.join(process.cwd(), "data", `reviews_${id}.json`);
 
   try {
     try {
