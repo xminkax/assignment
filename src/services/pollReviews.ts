@@ -17,6 +17,7 @@ interface FetchPageParams {
   country: string;
   appId: string;
   lastUpdatedDate: string | null;
+  fetchedPreviousReviews: Map<string, Review>;
 }
 
 interface FetchPageResult {
@@ -96,6 +97,7 @@ async function fetchPage({
   country,
   appId,
   lastUpdatedDate,
+  fetchedPreviousReviews,
 }: FetchPageParams): Promise<FetchPageResult> {
   const url = `https://itunes.apple.com/${country}/rss/customerreviews/id=${appId}/sortBy=mostRecent/page=${page}/json`;
   try {
@@ -139,8 +141,9 @@ async function fetchPage({
         rating: r["im:rating"]?.label ? parseInt(r["im:rating"].label) : null,
         date: r.updated?.label || null,
       };
-
-      fetchedReviews.set(reviewId, flattenedReview);
+      if (!fetchedPreviousReviews.has(reviewId)) {
+        fetchedReviews.set(reviewId, flattenedReview);
+      }
     }
     return {
       reviews: fetchedReviews,
@@ -151,6 +154,21 @@ async function fetchPage({
     console.error("Error fetching page:", e);
     throw e;
   }
+}
+
+function mergeMapsNoOverride<K, V>(
+  map1: Map<K, V>,
+  map2: Map<K, V>,
+): Map<K, V> {
+  const result = new Map(map1);
+
+  for (const [key, value] of map2) {
+    if (!result.has(key)) {
+      result.set(key, value);
+    }
+  }
+
+  return result;
 }
 
 export async function pollReviews(): Promise<void> {
@@ -172,6 +190,7 @@ export async function pollReviews(): Promise<void> {
         country: COUNTRY,
         appId: APP_ID,
         lastUpdatedDate: state?.latestUpdatedDate ?? null,
+        fetchedPreviousReviews: fetchedReviews,
       });
 
       if (reviews.size === 0) {
@@ -184,32 +203,6 @@ export async function pollReviews(): Promise<void> {
       if (!newestDate && reviews.size > 0) {
         const firstReview = Array.from(reviews.values())[0];
         newestDate = firstReview.date;
-      }
-
-      if (state?.isCompleted && isCompleted) {
-        await saveReviews({
-          state: { latestUpdatedDate: newestDate, isCompleted },
-          data: [
-            ...mapToObjectArray(fetchedReviews),
-            ...mapToObjectArray(mapData),
-          ],
-        });
-        console.log(`Saved ${reviews.size} new reviews.`);
-        break;
-      }
-      if (!state?.isCompleted && isCompleted) {
-        await saveReviews({
-          state: {
-            latestUpdatedDate: data[0]?.date || newestDate,
-            isCompleted,
-          },
-          data: [
-            ...mapToObjectArray(mapData),
-            ...mapToObjectArray(fetchedReviews),
-          ],
-        });
-        console.log(`Saved ${reviews.size} new reviews.`);
-        break;
       }
       if (!isCompleted) {
         await saveReviews({
@@ -224,6 +217,27 @@ export async function pollReviews(): Promise<void> {
       } else {
         currentPage++;
       }
+    }
+    if (state?.isCompleted && fetchedReviews.size > 0) {
+      await saveReviews({
+        state: { latestUpdatedDate: newestDate, isCompleted: true },
+        data: [
+          ...mapToObjectArray(mergeMapsNoOverride(fetchedReviews, mapData)),
+        ],
+      });
+      console.log(`Saved ${fetchedReviews.size} new reviews.`);
+    }
+    if (!state?.isCompleted && fetchedReviews.size > 0) {
+      await saveReviews({
+        state: {
+          latestUpdatedDate: data[0]?.date || newestDate,
+          isCompleted: true,
+        },
+        data: [
+          ...mapToObjectArray(mergeMapsNoOverride(mapData, fetchedReviews)),
+        ],
+      });
+      console.log(`Saved ${fetchedReviews.size} new reviews.`);
     }
     console.log(`[${new Date().toISOString()}] Polling reviews end.`);
   } catch (err) {

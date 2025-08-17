@@ -9,8 +9,8 @@ interface ReviewsData {
 }
 
 export async function GET(
-    request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<
   NextResponse<
     | Review[]

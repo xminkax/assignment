@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Backend 
 When the server starts, it polls reviews and schedules regular polling at intervals defined by the `POLL_INTERVAL` environment variable (default: 30 minutes).
-See `server.ts` and `/src/services/pollReviews.ts` for more details.
+See `server.ts` and `/src/services/pollReviews.ts` for more details. Review data are saved inside `/data` folder.
 
 ### Endpoints 
 Endpoints are defined following the Next.js structure inside the `/app` folder.
@@ -31,6 +31,9 @@ Endpoints are defined following the Next.js structure inside the `/app` folder.
 
 ### Client
 - using css modules and react    
+
+### Tests
+- testing only polling reviews code as frontend is quote straightforward
 
 ### Scenarios types when polling reviews
 The `/data` folder is used to save JSON files in the format `reviews_<id>.json`, where `<id>` is the app ID:
@@ -48,4 +51,3 @@ I am generating file that contains also app id so this could stay to have differ
 
 ### TODOs or if I would have more time
 - Add a button to load more reviews or implement infinite scrolling. Right now first amount of reviews is rendered server-side, and then on scroll next reviews would be displayed client side.
-- Improve tests. I added only 3 tests with AI and made small updates, but more thorough testing is needed—for example, testing the behavior when no new reviews are added or when polling resumes after a server interruption.

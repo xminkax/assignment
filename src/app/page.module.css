@@ -13,16 +13,6 @@
 
 .reviewsGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: var(--spacing-lg);
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding: var(--spacing-xl);
-  }
-
-  .reviewsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  }
 }
