@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Backend 
 When the server starts, it polls reviews and schedules regular polling at intervals defined by the `POLL_INTERVAL` environment variable (default: 30 minutes).
-See `server.ts` and `/src/services/pollReviews.ts` for more details. Review data are saved inside `/data` folder.
+See `server.ts` and `/src/services/pollReviews.ts` for more details. Reviews data are saved inside `/data` folder.
 
 ### Endpoints 
 Endpoints are defined following the Next.js structure inside the `/app` folder.
