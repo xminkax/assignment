@@ -26,14 +26,16 @@ See `server.ts` and `/src/services/pollReviews.ts` for more details. Reviews dat
 
 ### Endpoints 
 Endpoints are defined following the Next.js structure inside the `/app` folder.
-- http://localhost:3000/apps/595068606/reviews - returns reviews, which can be queried by hours, e.g http://localhost:3000/apps/595068606/reviews?hours=48
-- http://localhost:3000/apps/595068606/reviews/sync - allows polling reviews on demand
+- `/apps/<id>/reviews`: http://localhost:3000/apps/595068606/reviews - returns reviews, which can be queried by hours, e.g http://localhost:3000/apps/595068606/reviews?hours=48
+- `/apps/<id>/reviews/sync`: http://localhost:3000/apps/595068606/reviews/sync - allows polling reviews on demand  
+
+Right now I have hardcoded appId to poll reviews but endpoints could utilise id parameter in url for a different app id with small updates.
 
 ### Client
 - using css modules and react    
 
 ### Tests
-- testing only polling reviews code as frontend is quote straightforward
+- testing only polling reviews code as frontend is quite straightforward
 
 ### Scenarios types when polling reviews
 The `/data` folder is used to save JSON files in the format `reviews_<id>.json`, where `<id>` is the app ID:
@@ -42,7 +44,7 @@ The `/data` folder is used to save JSON files in the format `reviews_<id>.json`,
 - If the server stops while reviews are being polled, the current state is saved. When polling resumes, it continues from the page where it left off.
 
 ### Brainstorm: how to support any number of apps, and how this would affect your design.
-I am generating file that contains also app id so this could stay to have different file per appId. I would think about scaling how to support that if we have too many apps we don't reach rate limits, maybe reviews for different apps could be polled in different intervals, also it could be handled differently based on how many reviews app has etc. For example:
+I am generating file that contains also app id so this could stay to have different file per appId. Endpoints are supporting inside url id parameters. I would think about scaling how to support that if we have too many apps we don't reach rate limits, maybe reviews for different apps could be polled in different intervals, also it could be handled differently based on how many reviews app has etc. For example:
 - Poll apps with few seconds delayes between each
 - High priority apps poll first
 - Split large files
