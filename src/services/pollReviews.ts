@@ -68,6 +68,21 @@ interface Link {
   };
 }
 
+interface SaveIntermediateResultsParams {
+  isCompleted: boolean;
+  currentPage: number;
+  fetchedReviews: Map<string, Review>;
+  reviews: Map<string, Review>;
+}
+
+interface SaveCompleteReviewsParams {
+  state: ReviewState | null;
+  fetchedReviews: Map<string, Review>;
+  newestDate: string | null;
+  mapData: Map<string, Review>;
+  data: Review[];
+}
+
 function mapToObjectArray<K, T>(map: Map<K, T>): T[] {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return Array.from(map, ([_, value]) => ({ ...value }));
@@ -171,6 +186,49 @@ function mergeMapsNoOverride<K, V>(
   return result;
 }
 
+async function saveIntermediateResults({
+  isCompleted,
+  currentPage,
+  fetchedReviews,
+  reviews,
+}: SaveIntermediateResultsParams): Promise<void> {
+  if (!isCompleted) {
+    await saveReviews({
+      state: { latestUpdatedDate: null, isCompleted, page: currentPage },
+      data: mapToObjectArray(fetchedReviews),
+    });
+    console.log(`Saved ${reviews.size} new reviews.`);
+  }
+}
+
+async function saveCompleteReviews({
+  state,
+  fetchedReviews,
+  newestDate,
+  mapData,
+  data,
+}: SaveCompleteReviewsParams): Promise<void> {
+  if (state?.isCompleted && fetchedReviews.size > 0) {
+    await saveReviews({
+      state: { latestUpdatedDate: newestDate, isCompleted: true },
+      data: [...mapToObjectArray(mergeMapsNoOverride(fetchedReviews, mapData))],
+    });
+    console.log(`Saved ${fetchedReviews.size} new reviews.`);
+  }
+  if (!state?.isCompleted && fetchedReviews.size > 0) {
+    await saveReviews({
+      state: {
+        latestUpdatedDate: data[0]?.date || newestDate,
+        isCompleted: true,
+      },
+      data: [...mapToObjectArray(mergeMapsNoOverride(mapData, fetchedReviews))],
+    });
+    console.log(
+      `All reviews processed, file has: ${fetchedReviews.size} reviews.`,
+    );
+  }
+}
+
 export async function pollReviews(): Promise<void> {
   console.log(`[${new Date().toISOString()}] Polling reviews...`);
   const { state, data } = await fetchSavedReviews();
@@ -204,41 +262,25 @@ export async function pollReviews(): Promise<void> {
         const firstReview = Array.from(reviews.values())[0];
         newestDate = firstReview.date;
       }
-      if (!isCompleted) {
-        await saveReviews({
-          state: { latestUpdatedDate: null, isCompleted, page: currentPage },
-          data: mapToObjectArray(fetchedReviews),
-        });
-        console.log(`Saved ${reviews.size} new reviews.`);
-      }
-
       if (isCompleted || currentPage >= (lastPage || 0)) {
         isComplete = true;
       } else {
         currentPage++;
       }
-    }
-    if (state?.isCompleted && fetchedReviews.size > 0) {
-      await saveReviews({
-        state: { latestUpdatedDate: newestDate, isCompleted: true },
-        data: [
-          ...mapToObjectArray(mergeMapsNoOverride(fetchedReviews, mapData)),
-        ],
+      await saveIntermediateResults({
+        isCompleted,
+        currentPage,
+        fetchedReviews,
+        reviews,
       });
-      console.log(`Saved ${fetchedReviews.size} new reviews.`);
     }
-    if (!state?.isCompleted && fetchedReviews.size > 0) {
-      await saveReviews({
-        state: {
-          latestUpdatedDate: data[0]?.date || newestDate,
-          isCompleted: true,
-        },
-        data: [
-          ...mapToObjectArray(mergeMapsNoOverride(mapData, fetchedReviews)),
-        ],
-      });
-      console.log(`Saved ${fetchedReviews.size} new reviews.`);
-    }
+    await saveCompleteReviews({
+      state,
+      fetchedReviews,
+      newestDate,
+      mapData,
+      data,
+    });
     console.log(`[${new Date().toISOString()}] Polling reviews end.`);
   } catch (err) {
     console.error("Error polling reviews:", err);
