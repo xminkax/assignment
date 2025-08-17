@@ -192,13 +192,11 @@ async function saveIntermediateResults({
   fetchedReviews,
   reviews,
 }: SaveIntermediateResultsParams): Promise<void> {
-  if (!isCompleted) {
-    await saveReviews({
-      state: { latestUpdatedDate: null, isCompleted, page: currentPage },
-      data: mapToObjectArray(fetchedReviews),
-    });
-    console.log(`Saved ${reviews.size} new reviews.`);
-  }
+  await saveReviews({
+    state: { latestUpdatedDate: null, isCompleted, page: currentPage },
+    data: mapToObjectArray(fetchedReviews),
+  });
+  console.log(`Saved ${reviews.size} new reviews.`);
 }
 
 async function saveCompleteReviews({
@@ -264,6 +262,7 @@ export async function pollReviews(): Promise<void> {
       }
       if (isCompleted || currentPage >= (lastPage || 0)) {
         isComplete = true;
+        break;
       } else {
         currentPage++;
       }
